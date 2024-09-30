@@ -16,10 +16,17 @@ const EditJobPage = () => {
         contactEmail: '',
         contactPhone: ''
       });
+
+    const user=JSON.parse(localStorage.getItem("user"));
+    const token=user?user.token:null; 
       useEffect(() => {
         const fetchJob = async () => {
           try {
-            const res = await axios.get(`/api/jobs/${id}`);
+            const res = await axios.get(`/api/jobs/${id}`,{
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
+            });
             if (res.data) {
               setJob({
                 title: res.data.title,
@@ -50,7 +57,12 @@ const EditJobPage = () => {
                   contactEmail:job.contactEmail,
                   contactPhone:job.contactPhone,
                 },};
-          const res = await axios.put(`/api/jobs/${id}`, newJob);
+          const res = await axios.put(`/api/jobs/${id}`,newJob, {
+            headers: {
+              Authorization: `Bearer ${token}`
+              
+            }
+          } );
           if (res) {
             console.log('Job updated:', res.data);
           }
